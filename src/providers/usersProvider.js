@@ -38,4 +38,38 @@ UsersProvider.prototype.insertUser = function(options, callback) {
     );
 };
 
+UsersProvider.prototype.checkUser = function(username, password, callback) {
+    var dbConnection = mysqlDb.createConnection();
+
+    var queryString = "SELECT * FROM `users` WHERE username = ?",
+        values = [username];
+
+    dbConnection.query(
+        queryString,
+        values,
+        function select(status, data) {
+
+            var check = 'Error.';
+
+            if(typeof data[0] != 'undefined') {
+
+                if(data[0].password == password) {
+                    check = 'ok';
+                } else {
+                    check = 'The password is incorrect.';
+                }
+                
+            } else {
+                check = "This username doesn't exist.";
+            }
+
+            var response = {
+                check: check
+            };
+
+            callback(response);
+        }
+    );
+};
+
 module.exports = UsersProvider;

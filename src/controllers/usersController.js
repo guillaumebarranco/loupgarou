@@ -20,4 +20,10 @@ UsersController.prototype.insertUser = function(options, callback) {
     });
 };
 
+UsersController.prototype.checkUser = function(username, password, callback) {
+    usersProvider.checkUser(username, password, function(response) {
+        callback(response);
+    });
+};
+
 module.exports = UsersController;

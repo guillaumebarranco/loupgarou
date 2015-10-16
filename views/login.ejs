@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<title>Loup-Garou en ligne</title>
+
+		<link rel="stylesheet" href="css/styles.css">
+	</head>
+
+	<body>
+
+		<% if(typeof(error) != 'undefined' && error != undefined) { %>
+			<div style="height: 30px;"><%=error%></div>	
+		<% } %>
+
+		<h1>Loup-Garou en ligne</h1>
+
+		<h2>S'inscrire</h2>
+
+			<form action="http://localhost:2000/register" method="post">
+				<input type="text" name="username" />
+				<input type="password" name="password" />
+				<button>S'inscrire</button>
+			</form>
+
+
+		<h2>Se connecter</h2>
+		
+			<form action="http://localhost:2000/login" method="post">
+				<input type="text" name="username" />
+				<input type="password" name="password" />
+				<button>Se connecter</button>
+			</form>
+
+	</body>
+
+</html>
