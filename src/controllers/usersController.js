@@ -14,4 +14,10 @@ UsersController.prototype.getUsers = function(callback) {
     });
 };
 
+UsersController.prototype.insertUser = function(options, callback) {
+    usersProvider.insertUser(options, function(response) {
+        callback(response);
+    });
+};
+
 module.exports = UsersController;

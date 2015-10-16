@@ -26,6 +26,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 
+var roles = require('./src/routes/roles');
+app.use('/roles', roles);
+
 
 var users = require('./src/routes/users');
 app.use('/users', users);
@@ -44,7 +47,7 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function (socket) {
 
-	// socket.on('buttonColor', function (color) {
-	//     socket.broadcast.emit('showColor', color);
-	// });
+	socket.on('buttonColor', function (text) {
+	    socket.broadcast.emit('newText', text);
+	});
 });
