@@ -2,7 +2,7 @@
 <html lang="fr">
 	<head>
 		<meta charset="utf-8" />
-		<title>Vive Node.js !</title>
+		<title>Loup-Garou en ligne</title>
 
 		<link rel="stylesheet" href="css/styles.css">
 	</head>
@@ -33,20 +33,28 @@
 				<li>title 2</li>
 			</ul>
 		</div>
+		
+		<div style="padding: 20px; border: solid 1px black; height: 400px; position:relative; overflow-y:scroll;">
 
-		<div class="chat"></div>
+			<div class="chat"></div>
+			
+		</div>
+
+		<div>
+			<input type="text" class="textChat" />
+			<button class="sendChat">Send chat</button>
+		</div>
+		
+		<br><br>
 		
 		<button class="addUser">add</button>
 		<button class="getUsers">get users</button>
 		<button class="getRoles">get roles</button>
 	
-		<input type="text" class="textChat" />
-		<button class="sendChat">Send chat</button>
+		
 	
 		<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-		<!-- -->
-			<script src="/socket.io/socket.io.js"></script>
-		-->
+		<script src="/socket.io/socket.io.js"></script>
 		
 		<script src="js/main.js"></script>
 

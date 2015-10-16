@@ -49,5 +49,12 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('buttonColor', function (text) {
 	    socket.broadcast.emit('newText', text);
+	    socket.emit('newTextYours', text);
 	});
+
+	socket.on('night', function() {
+		socket.broadcast.emit('wake_up_lg');
+		socket.emit('wake_up_lg');
+	});
+	
 });
