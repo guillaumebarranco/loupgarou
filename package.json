@@ -1,0 +1,41 @@
+{
+  "name": "webarranco_node",
+  "version": "1.0.1",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Webarranco",
+    "email": "guillaume.barranco8@hotmail.fr"
+  },
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "body-parser": "^1.14.1",
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "mysql": "^2.9.0",
+    "socket.io": "^1.3.7"
+  },
+  "_id": "webarranco_node@1.0.1",
+  "_shasum": "f1018adec85f94b432a95d0266385ccd3ad3741d",
+  "_from": "webarranco_node@*",
+  "_npmVersion": "1.4.28",
+  "_npmUser": {
+    "name": "webarranco",
+    "email": "guillaume.barranco8@hotmail.fr"
+  },
+  "maintainers": [
+    {
+      "name": "webarranco",
+      "email": "guillaume.barranco8@hotmail.fr"
+    }
+  ],
+  "dist": {
+    "shasum": "f1018adec85f94b432a95d0266385ccd3ad3741d",
+    "tarball": "http://registry.npmjs.org/webarranco_node/-/webarranco_node-1.0.1.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/webarranco_node/-/webarranco_node-1.0.1.tgz"
+}
