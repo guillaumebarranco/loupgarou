@@ -66,7 +66,7 @@ $(document).ready(function() {
 
 			$('.roles').empty();
 			for (var i = 0; i < _this.response.length; i++) {
-				$('.roles').append('<li>'+_this.response[i].name+'</li>');
+				$('.roles').append('<li><img width="20" src="img/roles/'+_this.response[i].picture+'.jpg" />'+_this.response[i].name+'</li>');
 			}
 		});
 	//});
