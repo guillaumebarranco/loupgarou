@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<title>Loup-Garou en ligne</title>
+
+		<link rel="stylesheet" href="css/styles.css">
+	</head>
+
+	<body>
+		
+		<header>
+
+			<div class="logo">
+				<h1>Loup-Garou en ligne</h1>
+			</div>
+
+			<div class="account">
+				Mon Compte
+			</div>
+
+			<div class="disconnect">
+				<form action="http://localhost:2000/disconnect" method="post">
+					<button>Disconnect</button>
+				</form>
+			</div>
+			
+		</header>
+
+		<div class="wrapper">
+
+			<div class="bloc_left">
+
+				<div style="padding: 20px; border: solid 1px black; height: 400px; position:relative; overflow-y:scroll;">
+
+					<div class="chat"></div>
+					
+				</div>
+
+				<div>
+					<input type="text" class="textChat" />
+					<button class="sendChat">Send chat</button>
+				</div>
+				
+			</div>
+
+			<div class="bloc_right">
+
+				<div>
+					<b>Roles</b>
+
+					<ul class="roles">
+					</ul>
+				</div>
+
+				<div>
+					<b>Users</b>
+
+					<ul class="users">
+						<li class="current_user"><%=username%></li>
+					</ul>
+				</div>
+
+			</div>
+
+			<br><br>
+			
+			<!-- <button class="addUser">add</button>
+			<button class="getUsers">get users</button>
+			<button class="getRoles">get roles</button> -->
+
+		</div>
+
+		
+	
+		
+	
+		<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		
+		<script src="js/main.js"></script>
+
+	</body>
+
+</html>

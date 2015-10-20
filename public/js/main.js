@@ -47,8 +47,10 @@ $(document).ready(function() {
 
 		makeAjax('POST', app_url+"/users/insert", options, function() {
 
+			$('ul').empty();
+
 			for (var i = 0; i < _this.response.length; i++) {
-				$('ul').empty().append('<li>'+_this.response[i].username+'</li>');
+				$('ul').append('<li>'+_this.response[i].username+'</li>');
 			}
 		});
 
@@ -58,35 +60,47 @@ $(document).ready(function() {
 	*	ROLES
 	*/
 
-	$('.getRoles').on('click', function() {
+	//$('.getRoles').on('click', function() {
 
 		makeAjax('GET', app_url+"/roles/", '', function() {
 
+			$('.roles').empty();
 			for (var i = 0; i < _this.response.length; i++) {
-				$('.roles').empty().append('<li>'+_this.response[i].name+'</li>');
+				$('.roles').append('<li>'+_this.response[i].name+'</li>');
 			}
 		});
-	});
+	//});
 
 	/*
 	*	CHAT
 	*/
 
 	$('.sendChat').on('click', function() {
-		var content = $('.textChat').val();
-		if(content != '') socket.emit('buttonColor', {content: content});
+		var content = {};
+		content.content = $('.textChat').val();
+		content.username = $('.current_user').text();
+
+		if(content != '') {
+			socket.emit('sendText', {content: content});
+			$('.chat').append('<div><b>'+content.username+'</b>: '+content.content+'</div>');
+			$('.textChat').val('');
+		}
 	});
 
 	socket.on('newText', function (text) {
-		$('.chat').append('<div>'+text.content+'</div>');
+		console.log(text);
+		$('.chat').append('<div><b>'+text.content.username+'</b>: '+text.content.content+'</div>');
 	});
+
+
+
 
 	var user_id_admin = true;
 	var night = true;
 
-	socket.on('newTextYours', function (text) {
-		$('.chat').append('<div><b>'+text.content+'</b></div>');
-	});
+
+
+
 
 	// setTimeout(function() {
 	// 	if(user_id_admin && night) socket.emit('night');
@@ -131,6 +145,43 @@ $(document).ready(function() {
 	function launchGame() {
 		socket.emit('launch_game', {nb_players, composition});
 	}
+
+	function getRooms() {
+		makeAjax('GET', app_url+"/games/", '', function() {
+			$('.rooms').empty();
+
+			var koko;
+			var name;
+			var link;
+
+			for (var i = 0; i < _this.response.length; i++) {
+				name = _this.response[i].name;
+				link = "http://localhost:2000/play?="+_this.response[i].uniqd;
+				koko = `
+					<li>
+						<a href="${link}">${name}</a>
+					</li>
+				`;
+
+				$('.rooms').append(koko);
+			}
+		});
+	}
+
+	getRooms();
+
+	$('form.create').hide();
+
+	$('.createRoom').on('click', function() {
+		$(this).hide();
+		$('form.create').show();
+	});
+
+	$('.hide_create').on('click', function(e) {
+		e.preventDefault();
+		$(this).parent().hide();
+		$('.createRoom').show();
+	});
 
 	/*
 	*	GENERAL FUNCTIONS

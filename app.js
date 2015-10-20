@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var path = require ('path');
 
 var usersController = require('./src/controllers/usersController')();
+var gamesController = require('./src/controllers/gamesController')();
 
 var port = 2000;
 var app = express();
@@ -86,6 +87,25 @@ app.post('/disconnect', function(req,res){
     res.redirect('/');
 });
 
+app.post('/createRoom', function(req,res){
+
+	var game = {
+		name: req.body.name,
+		author: 'Gear',
+		is_playing: 0,
+		is_finished: 0,
+		players: 'Gear;',
+		has_password: req.body.has_password
+	};
+
+	game.password = (parseInt(req.body.has_password) === 1) ? req.body.password : null;
+
+	gamesController.createGame(game, function(response) {
+    	res.redirect('/game?id='+response.id);
+    });
+
+});
+
 
 app.engine('ejs', require('ejs').renderFile);
 app.set('view engine', 'ejs');
@@ -95,7 +115,12 @@ app.set('/views', __dirname + 'views');
 
 app.get('/', [requireLogin], function(req, res) {
 	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-    res.render('template.ejs', {});
+    res.render('home.ejs', {});
+});
+
+app.get('/play', [requireLogin], function(req, res) {
+	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.render('play.ejs', {username: sess.username});
 });
 
 app.get('/login', function(req, res) {
@@ -109,13 +134,14 @@ var roles = require('./src/routes/roles');
 app.use('/roles', roles);
 var users = require('./src/routes/users');
 app.use('/users', users);
+var games = require('./src/routes/games');
+app.use('/games', games);
 
 
 // Gestion erreurs 404
 app.use(function(req, res, next) {
-    res.status('Content-Type', 'text/plain').send(404, 'Page introuvable !');
+	res.status(404).send('Sorry cant find that!');
 });
-
 
 var server = app.listen(port);
 
@@ -128,9 +154,8 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function (socket) {
 
-	socket.on('buttonColor', function (text) {
-	    socket.broadcast.emit('newText', text);
-	    socket.emit('newTextYours', text);
+	socket.on('sendText', function (content) {
+	    socket.broadcast.emit('newText', content);
 	});
 
 	socket.on('night', function() {

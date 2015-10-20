@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<title>Loup-Garou en ligne</title>
+
+		<link rel="stylesheet" href="css/styles.css">
+	</head>
+
+	<body>
+
+		<header>
+
+			<div class="logo">
+				<h1>Loup-Garou en ligne</h1>
+			</div>
+
+			<div class="account">
+				Mon Compte
+			</div>
+
+			<div class="disconnect">
+				<form action="http://localhost:2000/disconnect" method="post">
+					<button>Disconnect</button>
+				</form>
+			</div>
+			
+		</header>
+
+		
+		<div class="wrapper">
+
+			<h2>Créer une room</h2>
+
+			<button class="createRoom">Create Room</button>
+
+
+
+			<form method="post" action="http://localhost:2000/createRoom" class="create">
+				<a href="#" class="hide_create">Retour</a>
+				
+				<input type="hidden" name="author" />
+
+				<div class="style_input">
+					<label for="name">Room Name</label>
+					<input type="text" name="name" />
+				</div>
+
+				<div class="style_input">
+					<label for="name">Mot de passe</label>
+
+					<select name="has_password" id="">
+						<option value="0">Non</option>
+						<option value="1">Oui</option>
+					</select>
+				</div>
+				
+				<div class="style_input">
+					<button>Valider</button>
+				</div>
+			</form>
+
+			<h3>Voir les rooms ouvertes</h3>
+
+			<ul class="rooms"></ul>
+
+		</div>
+		
+
+
+		
+
+
+		<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		
+		<script src="js/main.js"></script>
+
+	</body>
+
+</html>
