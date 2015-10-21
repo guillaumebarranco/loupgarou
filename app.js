@@ -158,6 +158,11 @@ io.sockets.on('connection', function (socket) {
 	    socket.broadcast.emit('newText', content);
 	});
 
+	socket.on('launchGame', function(composition) {
+		socket.emit('yourRole', composition);
+		socket.broadcast.emit('yourRole', composition);
+	});
+
 	socket.on('night', function() {
 		socket.broadcast.emit('wake_up_lg');
 		socket.emit('wake_up_lg');

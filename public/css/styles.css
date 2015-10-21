@@ -24,12 +24,19 @@ header div:first-child {
 	height: 600px;
 }
 
+.chat {
+	text-align: left;
+}
+
 .bloc_left {
-	float: left;
 	width: 80%;
+	display: inline-block;
+	vertical-align: top;
 }
 .bloc_right {
-	float: right;
+	width: 18%;
+	display: inline-block;
+	vertical-align: top;
 }
 
 .roles li {
@@ -45,7 +52,38 @@ header div:first-child {
 .composed {
 	text-decoration: underline;
 }
+.current_role {
+	position: relative;
+}
 
+.current_role .infos {
+	background: white;
+    color: black;
+    position: absolute;
+    top: 0;
+    display: none;
+}
+
+.chat div {
+	margin-top: 10px;
+}
+
+.chat div:first-child {
+	margin-top: 0px;
+}
+
+.current_role:hover .infos {
+	display: block;
+}
+
+
+.byGame {
+	color: aqua;
+}
+
+.byGame:before {
+	content: "[GAME] : ";
+}
 
 
 

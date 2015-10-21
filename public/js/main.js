@@ -2,6 +2,10 @@
 
 $(document).ready(function() {
 
+	/********************/
+	/*	   VARIABLES    */
+	/********************/
+
 	// CONSTANTS
 	var app_url = 'http://localhost:2000';
 	var _this = this;
@@ -12,23 +16,19 @@ $(document).ready(function() {
 
 	var players = [];
 	players[0] = 'koko';
-	players[1] = 'Gear';
+	players[1] = 'Gear 2nd';
+	// players[2] = 'Perona';
+	// players[3] = 'Hik';
+	// players[4] = 'Gérard';
 
-	var composition = [];
+	var composition = {};
 	var roles = [];
-
-	Array.prototype.unset = function(val){
-	    var index = this.indexOf(val)
-	    if(index > -1){
-	        this.splice(index,1)
-	    }
-	}
 
 	
 
-	/*
-	*	USERS
-	*/
+	/**********************/
+	/*	     USERS        */
+	/**********************/
 
 	$('.getUsers').on('click', function() {
 
@@ -95,12 +95,13 @@ $(document).ready(function() {
 			socket.emit('sendText', {content: content});
 			$('.chat').append('<div><b>'+content.username+'</b>: '+content.content+'</div>');
 			$('.textChat').val('');
+			$(".chat").scrollTop($(".chat")[0].scrollHeight);
 		}
 	});
 
 	socket.on('newText', function (text) {
-		console.log(text);
 		$('.chat').append('<div><b>'+text.content.username+'</b>: '+text.content.content+'</div>');
+		$(".chat").scrollTop($(".chat")[0].scrollHeight);
 	});
 
 
@@ -110,12 +111,6 @@ $(document).ready(function() {
 	var night = true;
 
 
-
-
-
-	// setTimeout(function() {
-	// 	if(user_id_admin && night) socket.emit('night');
-	// },5000);
 
 	socket.on('wake_up_lg', function (text) {
 		wake_up_lg();
@@ -155,20 +150,15 @@ $(document).ready(function() {
 
 	$('.launchGame').on('click', function() {
 
-		// console.log('nb_players', players);
-		// console.log('roles', roles.length);
-
 		if(players.length === roles.length) {
 			launchGame();
-		} else {
-			alert('Pas le même nombre de players et de roles choisis');
+
+		} else if(players.length > roles.length) {
+			alert('Il vous manque '+(players.length - roles.length)+' role(s).');
+		} else if(players.length < roles.length) {
+			alert('Il vous manque '+(roles.length - players.length)+' joueur(s).');
 		}
 	});
-
-	function rand(min, max) {
-		var the_random = Math.floor(Math.random() * (max - min + 1)) + min;
-		return the_random;
-	}
 
 	var tab_random = [];
 
@@ -176,8 +166,6 @@ $(document).ready(function() {
 		$('.launchGame').hide();
 
 		for (var i = 0; i < players.length; i++) {
-
-			console.log('tab_random', tab_random);
 
 			var get_rand = rand(0, (players.length - 1));
 
@@ -187,19 +175,77 @@ $(document).ready(function() {
 				}
 			}
 
-			console.log('get_rand', get_rand);
-
 			tab_random.push(get_rand);
 
-			composition[i] = [];
+			composition[i] = {};
 			composition[i].player = players[get_rand];
-			composition[i].role = roles[i];
+			composition[i].role =  roles[i];
 		}
 
 		console.log('composition', composition);
 
-		socket.emit('launch_game', {composition});
+		socket.emit('launchGame', {composition:composition});
 	}
+
+	socket.on('yourRole', function(compo) {
+
+		$('.roles').empty();
+
+		for (var i = 0; i < Object.size(compo.composition); i++) {
+			if(compo.composition[i].player === $('.current_user').text()) {
+				$('.chat').append('<div class="byGame">Votre role est <b>'+compo.composition[i].role.role_name+'</b>. Ne le communiquez surtout pas ! Vous trouverez la description de votre rôle en survolant votre carte en haut à droite.<div>');
+				$('.current_role').append('<div class="infos">Votre role est de tout faire pour tuer les loups-garous adverses en vous servant de vos pouvoirs.</div><img src="'+compo.composition[i].role.role_picture+'" width="150" />')
+			}
+			$('.roles').append('<li><img width="20" src="'+compo.composition[i].role.role_picture+'" /><span>'+compo.composition[i].role.role_name+'</span></li>');
+		}
+
+		beforeNight();
+
+	});
+
+	var interval;
+	var timer = 4000;
+	var time;
+	var value = 1000;
+
+	function beforeNight() {
+		interval = setInterval(function() {
+
+			time = Math.round((timer-value) /1000);
+
+			if(time > 60) {
+				$('.timer').text(time+' s');
+				value = value + 1000;
+			} else if(time < 60 && time > 0) {
+				$('.timer').text(time+' s');
+				value = value + 1000;
+			} else if(time == 0) {
+				clearInterval(interval);
+				$('.timer').text('');
+				makeNight();
+				
+			}
+		}, 1000);
+	}
+
+	$('.clearChat').on('click', function() {
+		$('.chat').empty();
+	})
+
+
+	function makeNight() {
+		$('.chat').append('<div class="byGame">La nuit est tombée.<div>');
+
+		//if(user_id_admin && night) socket.emit('night');
+	}
+
+
+
+
+
+
+
+
 
 	$(document).on('click', '.roles li', function() {
 
@@ -210,8 +256,14 @@ $(document).ready(function() {
 
 		} else {
 
+			var role_name = $(this).find('span').text();
+			var role_picture = $(this).find('img').attr('src');
+
 			$(this).addClass('composed');
-			roles.push($(this).find('span').text());
+			roles.push({
+				role_name,
+				role_picture
+			});
 		}
 	});
 
@@ -257,8 +309,26 @@ $(document).ready(function() {
 	});
 
 	/*
-	*	GENERAL FUNCTIONS
+	*	GENERIC FUNCTIONS
 	*/
+
+	function rand(min, max) {
+		var the_random = Math.floor(Math.random() * (max - min + 1)) + min;
+		return the_random;
+	}
+
+	Array.prototype.unset = function(val){
+	    var index = this.indexOf(val)
+	    if(index > -1){
+	        this.splice(index,1)
+	    }
+	}
+
+	Object.size = (obj) => {
+	    var size = 0;
+	    for (var key in obj) if (obj.hasOwnProperty(key)) size++;
+	    return size;
+	};
 
 	function makeAjax(type, url, data, callback) {
 
