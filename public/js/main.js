@@ -10,8 +10,19 @@ $(document).ready(function() {
 	// VARIABLES
 	var currentState = 'day';
 
-	var nb_players = 0;
-	var composition = {};
+	var players = [];
+	players[0] = 'koko';
+	players[1] = 'Gear';
+
+	var composition = [];
+	var roles = [];
+
+	Array.prototype.unset = function(val){
+	    var index = this.indexOf(val)
+	    if(index > -1){
+	        this.splice(index,1)
+	    }
+	}
 
 	
 
@@ -66,7 +77,7 @@ $(document).ready(function() {
 
 			$('.roles').empty();
 			for (var i = 0; i < _this.response.length; i++) {
-				$('.roles').append('<li><img width="20" src="img/roles/'+_this.response[i].picture+'.jpg" />'+_this.response[i].name+'</li>');
+				$('.roles').append('<li><img width="20" src="img/roles/'+_this.response[i].picture+'.jpg" /><span>'+_this.response[i].name+'</span></li>');
 			}
 		});
 	//});
@@ -142,9 +153,71 @@ $(document).ready(function() {
 	*	GAME
 	*/
 
-	function launchGame() {
-		socket.emit('launch_game', {nb_players, composition});
+	$('.launchGame').on('click', function() {
+
+		// console.log('nb_players', players);
+		// console.log('roles', roles.length);
+
+		if(players.length === roles.length) {
+			launchGame();
+		} else {
+			alert('Pas le même nombre de players et de roles choisis');
+		}
+	});
+
+	function rand(min, max) {
+		var the_random = Math.floor(Math.random() * (max - min + 1)) + min;
+		return the_random;
 	}
+
+	var tab_random = [];
+
+	function launchGame() {
+		$('.launchGame').hide();
+
+		for (var i = 0; i < players.length; i++) {
+
+			console.log('tab_random', tab_random);
+
+			var get_rand = rand(0, (players.length - 1));
+
+			if(tab_random.indexOf(get_rand) != -1) {
+				while(tab_random.indexOf(get_rand) != -1) {
+					get_rand = rand(0, (players.length - 1));
+				}
+			}
+
+			console.log('get_rand', get_rand);
+
+			tab_random.push(get_rand);
+
+			composition[i] = [];
+			composition[i].player = players[get_rand];
+			composition[i].role = roles[i];
+		}
+
+		console.log('composition', composition);
+
+		socket.emit('launch_game', {composition});
+	}
+
+	$(document).on('click', '.roles li', function() {
+
+		if($(this).hasClass('composed')) {
+
+			$(this).removeClass('composed');
+			roles.unset($(this).find('span').text());
+
+		} else {
+
+			$(this).addClass('composed');
+			roles.push($(this).find('span').text());
+		}
+	});
+
+
+
+
 
 	function getRooms() {
 		makeAjax('GET', app_url+"/games/", '', function() {

@@ -35,10 +35,15 @@ header div:first-child {
 .roles li {
 	width: 200px;
 	text-align: left;
+	cursor: pointer;
 }
 
 .roles li img {
 	margin-right: 30px;
+}
+
+.composed {
+	text-decoration: underline;
 }
 
 
