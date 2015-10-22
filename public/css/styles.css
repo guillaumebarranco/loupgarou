@@ -81,8 +81,16 @@ header div:first-child {
 	color: aqua;
 }
 
+.byUser {
+	color: purple;
+}
+
 .byGame:before {
 	content: "[GAME] : ";
+}
+
+.byPrivate {
+	color: red;
 }
 
 

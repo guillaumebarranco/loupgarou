@@ -154,6 +154,10 @@ var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function (socket) {
 
+	socket.on('justArrived', function(username) {
+		socket.broadcast.emit('newUser', username);
+	}); 
+
 	socket.on('sendText', function (content) {
 	    socket.broadcast.emit('newText', content);
 	});
