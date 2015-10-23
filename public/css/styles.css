@@ -116,6 +116,10 @@ button:hover {
 	color: aqua;
 }
 
+.byUser {
+	color: purple;
+}
+
 .byGame:before {
 	content: "[GAME] : ";
 }
@@ -123,6 +127,11 @@ button:hover {
 /*
 *	HOME
 */
+=======
+.byPrivate {
+	color: red;
+}
+
 
 .rooms {
 	max-width: 400px;

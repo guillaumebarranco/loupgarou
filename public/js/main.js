@@ -21,8 +21,12 @@ $(document).ready(function() {
 	// players[3] = 'Hik';
 	// players[4] = 'Gérard';
 
+	var user_role;
+
 	var composition = {};
 	var roles = [];
+
+	var username = $('.current_user').text();
 
 	
 
@@ -33,8 +37,6 @@ $(document).ready(function() {
 	$('.getUsers').on('click', function() {
 
 		makeAjax('GET', app_url+"/users/", '', function() {
-
-			console.log(_this.response);
 
 			for (var i = 0; i < _this.response.length; i++) {
 				$('.users').append('<li>'+_this.response[i].username+'</li>');
@@ -103,6 +105,20 @@ $(document).ready(function() {
 		$('.chat').append('<div><b>'+text.content.username+'</b>: '+text.content.content+'</div>');
 		$(".chat").scrollTop($(".chat")[0].scrollHeight);
 	});
+
+	function justArrived() {
+
+		$('.chat').append('<div class="byUser"><b>'+username+'</b> est arrivé dans le salon<div>');
+		socket.emit('justArrived', {username:username});
+
+		socket.on('newUser', function(username) {
+			$('.chat').append('<div class="byUser"><b>'+username.username+'</b> est arrivé dans le salon<div>');
+		});
+	}
+
+	justArrived();
+
+	
 
 
 
@@ -182,8 +198,6 @@ $(document).ready(function() {
 			composition[i].role =  roles[i];
 		}
 
-		console.log('composition', composition);
-
 		socket.emit('launchGame', {composition:composition});
 	}
 
@@ -193,9 +207,13 @@ $(document).ready(function() {
 
 		for (var i = 0; i < Object.size(compo.composition); i++) {
 			if(compo.composition[i].player === $('.current_user').text()) {
-				$('.chat').append('<div class="byGame">Votre role est <b>'+compo.composition[i].role.role_name+'</b>. Ne le communiquez surtout pas ! Vous trouverez la description de votre rôle en survolant votre carte en haut à droite.<div>');
-				$('.current_role').append('<div class="infos">Votre role est de tout faire pour tuer les loups-garous adverses en vous servant de vos pouvoirs.</div><img src="'+compo.composition[i].role.role_picture+'" width="150" />')
+				
+				user_role = compo.composition[i].role.role_name.toLowerCase();
+
+				$('.chat').append('<div class="byGame">Votre role est <b>'+user_role+'</b>. Ne le communiquez surtout pas ! Vous trouverez la description de votre rôle en survolant votre carte en haut à droite.<div>');
+				$('.current_role').append('<div class="infos">Votre role est de tout faire pour tuer les loups-garous adverses en vous servant de vos pouvoirs.</div><img src="'+compo.composition[i].role.role_picture+'" width="150" />');
 			}
+			
 			$('.roles').append('<li><img width="20" src="'+compo.composition[i].role.role_picture+'" /><span>'+compo.composition[i].role.role_name+'</span></li>');
 		}
 
@@ -230,11 +248,76 @@ $(document).ready(function() {
 
 	$('.clearChat').on('click', function() {
 		$('.chat').empty();
-	})
+	});
+
+	function chatGame(text) {
+		$('.chat').append('<div class="byGame">'+text+'</div>');
+	}
+
+	function chatPrivate(text) {
+		$('.chat').append('<div class="byPrivate">'+text+'</div>');
+	}
+
+
 
 
 	function makeNight() {
 		$('.chat').append('<div class="byGame">La nuit est tombée.<div>');
+
+		console.log('composition', composition);
+
+		setTimeout(function() {
+
+			for (var i = 0; i < Object.size(composition); i++) {
+
+				switch(composition[i].role.role_name.toLowerCase()) {
+
+					case 'corbeau':
+						chatGame("Le corbeau va pouvoir désigner quelqu'un");
+						if(user_role === 'corbeau') {
+							chatPrivate("Qui voulez vous désigner ?");
+						}
+					break;
+
+					case 'sorciere':
+						var sosoHasPotion = true;
+
+						if(sosoHasPotion) {
+							chatGame("La sorcière va pouvoir utiliser ses potions");
+						}
+					break;
+
+					case 'loup-garou':
+						chatGame("Les loups-garous vont pouvoir dévorer quelqu'un");
+					break;
+
+					case 'loup-garou-blanc':
+						var isNightPair = true;
+
+						if(isNightPair) {
+							chatGame("Le loup-garou blanc va pouvoir tuer un loup-garou");
+						}
+					break;
+
+					case 'salvateur':
+						chatGame("Le salvateur va pouvoir protéger quelqu'un.");
+						if(user_role === 'salvateur') {
+							chatPrivate("Qui voulez-vous protéger ?");
+						}
+					break;
+
+					case 'voyante':
+						chatGame("La voyante va pouvoir espionner un joueur");
+					break;
+
+					case 'chaman':
+						chatGame("Le chaman va pouvoir communiquer avec les morts");
+					break;
+
+					default: break;
+				}
+			};
+		}, 1000);
 
 		//if(user_id_admin && night) socket.emit('night');
 	}
