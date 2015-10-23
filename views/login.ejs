@@ -9,27 +9,63 @@
 
 	<body>
 
-		<% if(typeof(error) != 'undefined' && error != undefined) { %>
-			<div style="height: 30px;"><%=error%></div>	
-		<% } %>
+		<div class="wrapper">
 
-		<h1>Loup-Garou en ligne</h1>
+			<% if(typeof(error) != 'undefined' && error != undefined) { %>
+				<div style="height: 30px;"><%=error%></div>	
+			<% } %>
 
-		<h2>S'inscrire</h2>
+			<h1>Loup-Garou en ligne</h1>
 
-			<form action="http://localhost:2000/register" method="post">
-				<input type="text" name="username" />
-				<input type="password" name="password" />
-				<button>S'inscrire</button>
-			</form>
+			<div class="section_login">
+				<h2>Se connecter</h2>
 
-		<h2>Se connecter</h2>
-		
-			<form action="http://localhost:2000/login" method="post">
-				<input type="text" name="username" />
-				<input type="password" name="password" />
-				<button>Se connecter</button>
-			</form>
+				<h3>Tu as déjà un compte ? Connecte-toi !</h3>
+				
+				<form action="http://localhost:2000/login" class="form_login" method="post">
+
+					<div class="style_input">
+						<label for="username"></label>
+						<input type="text" name="username" />
+					</div>
+
+					<div class="style_input">
+						<label for="password"></label>
+						<input type="password" name="password" />
+					</div>
+
+					<div class="style_input">
+						<button>Se connecter</button>
+					</div>
+					
+				</form>
+			</div>
+
+			<div class="section_register">
+				<h2>S'inscrire</h2>
+
+				<h3>Pas encore de compte ? Mais qu'est-ce que tu attends ?</h3>
+
+				<form action="http://localhost:2000/register" method="post">
+					<div class="style_input">
+						<label for="username"></label>
+						<input type="text" name="username" />
+					</div>
+
+					<div class="style_input">
+						<label for="password"></label>
+						<input type="password" name="password" />
+					</div>
+
+					<div class="style_input">
+						<button>S'inscrire</button>
+					</div>
+				</form>
+			</div>
+
+			
+
+		</div>		
 
 	</body>
 

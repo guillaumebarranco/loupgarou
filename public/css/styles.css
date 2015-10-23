@@ -3,6 +3,7 @@ body {
 	background-image: url('../img/background.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
+	font-family: 'Roboto', sans-serif;
 }
 
 header div {
@@ -11,6 +12,16 @@ header div {
 }
 header div:first-child {
 	margin-left: 0px;
+}
+
+button {
+	border: solid 1px white;
+    background-color: transparent;
+    color: white;
+    padding: 10px 14px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: 0.4s;
 }
 
 .wrapper {
@@ -22,6 +33,30 @@ header div:first-child {
 	padding: 20px;
 	clear: both;
 	height: 600px;
+}
+
+.section_login, .section_register {
+	display: inline-block;
+	vertical-align: top;
+	width: 40%;
+}
+
+form button {
+}
+
+form input {
+	border: solid 1px black;
+    background-color: white;
+    color: #222;
+    padding: 7px 4px;
+}
+
+
+
+button:hover {
+	border: solid 1px black;
+    background-color: white;
+    color: black;
 }
 
 .chat {
@@ -85,7 +120,36 @@ header div:first-child {
 	content: "[GAME] : ";
 }
 
+/*
+*	HOME
+*/
 
+.rooms {
+	max-width: 400px;
+	margin: 0 auto;
+}
+
+.rooms li {
+	border: solid 1px white;
+	margin-top: 10px;
+}
+
+.rooms li:first-child {
+	margin-top: 0;
+}
+
+.rooms li a {
+	box-sizing: border-box;
+	padding: 5px;
+	display: block;
+	width: 100%;
+	text-decoration: none;
+}
+
+.rooms li a:hover {
+	background-color: white;
+	color: black;
+}
 
 
 ul {

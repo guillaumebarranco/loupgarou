@@ -123,6 +123,11 @@ app.get('/play', [requireLogin], function(req, res) {
     res.render('play.ejs', {username: sess.username});
 });
 
+app.get('/account', [requireLogin], function(req, res) {
+	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.render('account.ejs', {username: sess.username});
+});
+
 app.get('/login', function(req, res) {
 	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     res.render('login.ejs');

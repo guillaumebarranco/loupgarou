@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<title>Loup-Garou en ligne</title>
+
+		<link rel="stylesheet" href="css/styles.css">
+	</head>
+
+	<body>
+
+		<header>
+
+			<div class="logo">
+				<h1>Loup-Garou en ligne</h1>
+			</div>
+
+			<div class="account">
+				<a href="http://localhost:2000/account">Mon Compte</a>
+			</div>
+
+			<div class="disconnect">
+				<form action="http://localhost:2000/disconnect" method="post">
+					<button>Disconnect</button>
+				</form>
+			</div>
+			
+		</header>
+
+		
+		<div class="wrapper">
+
+			<h2>Mon Compte</h2>
+
+			<p><%=username%></p>
+
+			<div>
+				Mes titres
+
+				<ul></ul>
+			</div>
+
+			<div>Statut
+				
+				<ul>
+					<li>Victoires :</li>
+					<li>Défaites :</li>
+					<li>Matchs nuls :</li>
+				</ul>
+			</div>
+
+			<a href="http://localhost:2000/">Retour à la Home</a>
+
+		</div>
+		
+
+
+		
+
+
+		<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+		
+		<script src="js/main.js"></script>
+
+	</body>
+
+</html>
