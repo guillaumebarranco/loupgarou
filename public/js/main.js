@@ -28,6 +28,21 @@ $(document).ready(function() {
 
 	var username = $('.current_user').text();
 
+	var all_roles = {};
+
+	var search_role = {
+		0: 'loup-garou',
+		0: 'sorciere',
+		0: 'villageois',
+		0: 'voyante',
+		0: 'cupidon',
+		0: 'petite_fille',
+		0: 'loup-garou',
+		0: 'loup-garou',
+		0: 'loup-garou',
+		0: 'loup-garou',
+	};
+
 	
 
 	/**********************/
@@ -73,15 +88,24 @@ $(document).ready(function() {
 	*	ROLES
 	*/
 
-	//$('.getRoles').on('click', function() {
+	function getRoles() {
 
 		makeAjax('GET', app_url+"/roles/", '', function() {
 
 			$('.roles').empty();
+			all_roles = _this.response;
 			for (var i = 0; i < _this.response.length; i++) {
 				$('.roles').append('<li><img width="20" src="img/roles/'+_this.response[i].picture+'.jpg" /><span>'+_this.response[i].name+'</span></li>');
 			}
+			console.log(all_roles);
 		});
+	}
+
+	getRoles();
+
+	//$('.getRoles').on('click', function() {
+
+		
 	//});
 
 	/*
@@ -118,47 +142,6 @@ $(document).ready(function() {
 
 	justArrived();
 
-	
-
-
-
-
-	var user_id_admin = true;
-	var night = true;
-
-
-
-	socket.on('wake_up_lg', function (text) {
-		wake_up_lg();
-	});
-
-	socket.on('wake_up_vovo', function (text) {
-		wake_up_vovo();
-	});
-
-	function wake_up_vovo() {
-		$('.chat').append('<div><em>La voyante va pouvoir espionner un joueur de son choix.</em></div>');
-	}
-
-	function wake_up_lg() {
-		$('.chat').append('<div><em>Les loups garous vont pouvoir se réveiller.</em></div>');
-	}
-
-	function wake_up_soso() {
-		$('.chat').append('<div><em>La sorcière va pouvoir utiliser ses potions.<em></div>');
-	}
-
-	function wake_up_corbac() {
-		$('.chat').append("<div><em>Le corbeau va pouvoir désigner quelqu'un.<em></div>");
-	}
-
-	function wake_up_lgb() {
-		$('.chat').append("<div><em>Le Loup-Garou blanc va pouvoir assassiner un autre loup-garou.<em></div>");
-	}
-
-	function wake_up_salva() {
-		$('.chat').append("<div><em>Le Salvateur va pouvoir protéger quelqu'un.<em></div>");
-	}
 
 	/*
 	*	GAME
@@ -213,7 +196,7 @@ $(document).ready(function() {
 				$('.chat').append('<div class="byGame">Votre role est <b>'+user_role+'</b>. Ne le communiquez surtout pas ! Vous trouverez la description de votre rôle en survolant votre carte en haut à droite.<div>');
 				$('.current_role').append('<div class="infos">Votre role est de tout faire pour tuer les loups-garous adverses en vous servant de vos pouvoirs.</div><img src="'+compo.composition[i].role.role_picture+'" width="150" />');
 			}
-			
+
 			$('.roles').append('<li><img width="20" src="'+compo.composition[i].role.role_picture+'" /><span>'+compo.composition[i].role.role_name+'</span></li>');
 		}
 
@@ -258,6 +241,10 @@ $(document).ready(function() {
 		$('.chat').append('<div class="byPrivate">'+text+'</div>');
 	}
 
+	/*
+	*	NIGHT
+	*/
+
 
 
 
@@ -284,6 +271,9 @@ $(document).ready(function() {
 
 						if(sosoHasPotion) {
 							chatGame("La sorcière va pouvoir utiliser ses potions");
+							if(user_role === 'corbeau') {
+								chatPrivate("Qui voulez vous désigner ?");
+							}
 						}
 					break;
 
@@ -297,6 +287,7 @@ $(document).ready(function() {
 						if(isNightPair) {
 							chatGame("Le loup-garou blanc va pouvoir tuer un loup-garou");
 						}
+
 					break;
 
 					case 'salvateur':
@@ -308,6 +299,9 @@ $(document).ready(function() {
 
 					case 'voyante':
 						chatGame("La voyante va pouvoir espionner un joueur");
+						if(user_role === 'voyante') {
+							chatPrivate("Qui souhaitez-vous espionner ?");
+						}
 					break;
 
 					case 'chaman':
@@ -322,6 +316,42 @@ $(document).ready(function() {
 		//if(user_id_admin && night) socket.emit('night');
 	}
 
+	var user_id_admin = true;
+	var night = true;
+
+
+
+	socket.on('wake_up_lg', function (text) {
+		wake_up_lg();
+	});
+
+	socket.on('wake_up_vovo', function (text) {
+		wake_up_vovo();
+	});
+
+	function wake_up_vovo() {
+		$('.chat').append('<div><em>La voyante va pouvoir espionner un joueur de son choix.</em></div>');
+	}
+
+	function wake_up_lg() {
+		$('.chat').append('<div><em>Les loups garous vont pouvoir se réveiller.</em></div>');
+	}
+
+	function wake_up_soso() {
+		$('.chat').append('<div><em>La sorcière va pouvoir utiliser ses potions.<em></div>');
+	}
+
+	function wake_up_corbac() {
+		$('.chat').append("<div><em>Le corbeau va pouvoir désigner quelqu'un.<em></div>");
+	}
+
+	function wake_up_lgb() {
+		$('.chat').append("<div><em>Le Loup-Garou blanc va pouvoir assassiner un autre loup-garou.<em></div>");
+	}
+
+	function wake_up_salva() {
+		$('.chat').append("<div><em>Le Salvateur va pouvoir protéger quelqu'un.<em></div>");
+	}
 
 
 
@@ -330,6 +360,7 @@ $(document).ready(function() {
 
 
 
+	// CHOOSE ROLES
 	$(document).on('click', '.roles li', function() {
 
 		if($(this).hasClass('composed')) {
@@ -353,7 +384,7 @@ $(document).ready(function() {
 
 
 
-
+	/// RECUPERER LES ROOMS
 	function getRooms() {
 		makeAjax('GET', app_url+"/games/", '', function() {
 			$('.rooms').empty();
@@ -429,5 +460,7 @@ $(document).ready(function() {
 	        }
 		});
 	}
+
+
 
 });
